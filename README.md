@@ -21,12 +21,12 @@ These calculations are valid over:
 * Ian Dobbs-Dixon (NYU Abu Dhabi)
 
 ### Install
-``rate`` is compatible with both Python2 and Python3, and runs (at least) in both Linux and OSX.  
-To obtain the ``rate`` code, clone this repository to your local machine with the following terminal commands:  
+
 ```shell
-# Clone the repository to your working directory:  
-git clone https://github.com/pcubillos/rate/
+pip install git+https://github.com/pcubillos/rate.git
 ```
+
+``rate`` is compatible with Python3, and runs (at least) in both Linux and OSX.
 
 ### Getting Started
 
