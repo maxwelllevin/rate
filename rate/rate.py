@@ -3,28 +3,43 @@
 
 __all__ = ["gRT", "newton_raphson", "bound_nr", "top", "Rate"]
 
-import os
+import pkgutil
+from io import StringIO
 import numpy as np
 import scipy.constants   as sc
 import scipy.interpolate as si
 
 
-rootdir = os.path.realpath(os.path.dirname(__file__) + "/../")
+MOLECULE_INPUTS = (
+    "C2H2_g.txt",
+    "C2H4_g.txt",
+    "CH4_g.txt",
+    "CO2_g.txt",
+    "CO_g.txt",
+    "H2O_g.txt",
+    "H2_ref.txt",
+    "HCN_g.txt",
+    "H_g.txt",
+    "N2_ref.txt",
+    "NH3_g.txt",
+)
 
 
-class gRT():
+class gRT:
   """
   Object to compute the Gibbs free energies from JANAF data.
   Available species are: H2, H2O, CO, CO2, CH4, C2H2, C2H4, HCN, NH3, and N2.
   """
+
   def __init__(self):
-    self.heat = {}
-    self.free_energy = {}
-    path = rootdir + "/inputs/"
-    for filename in os.listdir(path):
-      if filename.endswith(".txt"):
-        molname = filename.split("_")[0]
-        T, G, H = np.loadtxt(path+filename, unpack=True)
+   self.heat = {}
+   self.free_energy = {}
+   for molecule_file in MOLECULE_INPUTS:
+        molname = molecule_file.split("_")[0]
+        file_contents = StringIO(
+          pkgutil.get_data(__package__, f"inputs/{molecule_file}").decode("utf-8")
+        )
+        T, G, H = np.loadtxt(file_contents, unpack=True)
         self.heat[molname] = 1000 * H[T==298.15][0] / sc.R
         self.free_energy[molname] = si.UnivariateSpline(T, G/sc.R, s=1)
 
